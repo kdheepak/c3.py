@@ -25,6 +25,20 @@ def my_form_post():
                 """)
 
 
+def breadth_first_add(G, commit, N):
+    queue = []
+    queue.append(commit)
+    G.add_node(commit.hexsha, message=commit.message.split("\n")[0])
+        
+    while len(G.nodes()) < N:
+        if len(queue)==0:
+            break
+        commit = queue.pop()
+        for c in commit.parents:
+            G.add_edge(commit.hexsha, c.hexsha)
+            G.add_node(c.hexsha, message=c.message.split("\n")[0])
+            queue.append(c)
+
 @app.route("/data")
 def data():
     import json
@@ -33,27 +47,14 @@ def data():
     import networkx as nx
     G = nx.DiGraph()
 
-    parent = None
-
-    g = git.Git(repo_path) 
     repo = git.Repo(repo_path)
 
-    loginfo = g.log()
 
-    def get_hash(commit):
-        return commit.split("\n")[0]
+    commit = repo.active_branch.commit
 
-    commits = loginfo.split("\n\ncommit ")
-    commits[0] = commits[0].replace("commit ", '')
-
-    for item in commits[:20]:
-        node = "{}".format(get_hash(item))
-        commit = repo.commit(get_hash(item))
-        G.add_node(node, message=commit.message.split("\n")[0])
-        for parent in commit.parents:
-            G.add_node(parent.hexsha, message=parent.message.split("\n")[0])
-            G.add_edge(node, parent.hexsha)
-
+    breadth_first_add(G, commit, 10)
+    
+    nx.write_dot(G,'test.dot')
     pos=nx.graphviz_layout(G, prog='dot')
 
     from networkx.readwrite import json_graph
