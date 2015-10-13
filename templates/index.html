@@ -39,18 +39,7 @@ function render()
   var nodeUpdateSelection = vis.selectAll("circle.node")
       .data(data.nodes);
 
-      nodeUpdateSelection
-      .append("svg:circle")
-      .attr("class", "node")
-      .attr("cx", function(d, i) { return d.pos[0]; })
-      .attr("cy", function(d, i) { return h-d.pos[1]; })
-      .attr("r", 10)
-      .style('fill-opacity', 0)
-      .transition()
-        .duration(1000)
-        .style('fill-opacity', 1);
-
-        console.log("Finish UpdateData");
+    nodeUpdateSelection.exit().remove();
 
     nodeUpdateSelection.enter().append("svg:circle")
       .attr("class", "node")
@@ -61,10 +50,13 @@ function render()
       .transition()
         .duration(1000)
         .style('fill-opacity', 1)
-        console.log("Finish EnterData")
 
-  var text = vis.selectAll("text")
-      .data(data.nodes)
+    var textUpdateSelection = vis.selectAll("text")
+        .data(data.nodes);
+
+    textUpdateSelection.exit().remove();
+
+    textUpdateSelection
     .enter().append("text")
       .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
                  .attr("x", function(d) { return 15+d.pos[0]; })
@@ -80,8 +72,12 @@ function render()
 var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; }
 var PosY = function(d, i, location) { return h-data.nodes[d[location]].pos[1]; }
 
-var link = vis.selectAll(".link")
-      .data(data.links)
+var linkUpdateSelection = vis.selectAll(".link")
+      .data(data.links);
+
+    linkUpdateSelection.exit().remove()
+
+    linkUpdateSelection
     .enter().append("line")          // attach a line
     .style("stroke", "black")  // colour the line
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
