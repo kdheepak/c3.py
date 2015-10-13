@@ -24,12 +24,24 @@ def my_form_post():
     </form>
                 """)
 
+def branch_name(node, repo):
+    for b in repo.branches:
+        if b.commit.hexsha == node:
+            return b.name
+        else:
+            pass
+    return False
+
+def head_name(node, repo):
+    if node == repo.active_branch.commit.hexsha:
+        return "HEAD"
+
 
 def breadth_first_add(G, commit, N):
     queue = []
     queue.append(commit)
     G.add_node(commit.hexsha, message=commit.message.split("\n")[0])
-        
+
     while len(G.nodes()) < N:
         if len(queue)==0:
             break
@@ -53,14 +65,23 @@ def data():
     commit = repo.active_branch.commit
 
     breadth_first_add(G, commit, 10)
-    
+
     nx.write_dot(G,'test.dot')
     pos=nx.graphviz_layout(G, prog='dot')
 
     from networkx.readwrite import json_graph
     data = json_graph.node_link_data(G)
-    
+
+    data['labels'] = []
+
     for node in data['nodes']:
+        if branch_name(node['id'], repo):
+            data[branch_name(node['id'], repo)] = pos[node['id']]
+            data['labels'].append(branch_name(node['id'], repo))
+        if head_name(node['id'], repo):
+            data[head_name(node['id'], repo)] = pos[node['id']]
+            data['labels'].append(head_name(node['id'], repo))
+
         node['pos'] = pos[node['id']]
 
     j = json.dumps(data)
