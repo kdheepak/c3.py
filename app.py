@@ -28,7 +28,7 @@ def data():
     commits = loginfo.split("\n\ncommit ")
     commits[0] = commits[0].replace("commit ", '')
 
-    for item in commits[:15]:
+    for item in commits[:5]:
         node = "{}".format(get_hash(item))
         tree.add_node(node)
         commit = repo.commit(get_hash(item))
