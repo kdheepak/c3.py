@@ -30,11 +30,12 @@ def data():
     commits = loginfo.split("\n\ncommit ")
     commits[0] = commits[0].replace("commit ", '')
 
-    for item in commits[:15]:
+    for item in commits[:20]:
         node = "{}".format(get_hash(item))
-        G.add_node(node)
         commit = repo.commit(get_hash(item))
+        G.add_node(node, message=commit.message.split("\n")[0])
         for parent in commit.parents:
+            G.add_node(parent.hexsha, message=parent.message.split("\n")[0])
             G.add_edge(node, parent.hexsha)
 
     pos=nx.graphviz_layout(G, prog='dot')
