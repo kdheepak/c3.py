@@ -11,7 +11,14 @@
 
     <h1>Git history visualized using networkx and d3.js</h1>
 
+    <form action="." method="POST">
+        <input type="text" name="text">
+        <input type="submit" name="my-form" value="Send">
+    </form>
+
     <div id="chart"></div>
+
+
 <script src='http://d3js.org/d3.v3.min.js'></script>
 
 <script>
@@ -24,7 +31,7 @@ var vis = d3.select("#chart")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("/data", function(data) {
+    d3.json("/data", function(data) {
 
     console.log(data)
   var node = vis.selectAll("circle.node")

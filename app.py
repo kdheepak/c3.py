@@ -1,13 +1,29 @@
 from flask import Flask
 from flask import render_template
+from flask import render_template_string
+from flask import request
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-repo_path = '../ames-py'
+repo_path = ''
 
-@app.route("/")
-def main():
-    return render_template("index.html")
+app = Flask(__name__)
+
+@app.route('/', methods=['POST', 'GET'])
+def my_form_post():
+    global repo_path
+    if request.method == 'POST':
+        repo_path = request.form['text']
+        return render_template("index.html")
+    else:
+        return render_template_string("""
+    <form action="." method="POST">
+        <input type="text" name="text">
+        <input type="submit" name="my-form" value="Send">
+    </form>
+                """)
+
 
 @app.route("/data")
 def data():
@@ -50,4 +66,13 @@ def data():
     return(j)
 
 if __name__ == "__main__":
-    app.run()
+    import os
+
+    port = 5000
+
+    # Open a web browser pointing at the app.
+    os.system("open http://localhost:{0}".format(port))
+
+    # Set up the development server on port 8000.
+    app.debug = True
+    app.run(port=port)
