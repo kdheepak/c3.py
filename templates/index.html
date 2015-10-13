@@ -27,21 +27,18 @@ var vis = d3.select("#chart")
 
 d3.json("/data", function(data) {
 
+    console.log(data)
   var node = vis.selectAll("circle.node")
-      .data(data)
+      .data(data.tree)
     .enter().append("svg:circle")
       .attr("class", "node")
       .attr("cx", function(d, i) { return d.pos[0]; })
       .attr("cy", function(d, i) { return d.pos[1]; })
       .attr("r", 10)
 
-  var link = vis.selectAll(".link")
-      .data(edges)
-    .enter().append("line")
-      .attr("class", "link");
 
   node.append("svg:title")
-      .text(function(d) { return d.name; });
+      .text(function(d) { return d.id; });
 });
 
     </script>

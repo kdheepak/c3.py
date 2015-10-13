@@ -3,6 +3,8 @@ from flask import render_template
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+repo_path = '../ames-py'
+
 @app.route("/")
 def main():
     return render_template("index.html")
@@ -36,20 +38,21 @@ def data():
             tree.add_edge(node, parent.hexsha)
 
     G = tree
-    nx.write_dot(G,'test.dot')
 
     # same layout using matplotlib with no labels
-    pos=nx.graphviz_layout(G,prog='dot')
-    nx.draw(G,pos,with_labels=False,arrows=False)
+    pos=nx.graphviz_layout(G, prog='dot')
+    #nx.draw(G, pos, with_labels=False, arrows=False)
 
-    #from networkx.readwrite import json_graph
-    #data = json_graph.node_link_data(tree)
-    j=[]
+    from networkx.readwrite import json_graph
+    data = json_graph.node_link_data(tree)
+
+    tree_data=[]
     for key in pos:
-        j.append({'id': key,
+        tree_data.append({'id': key,
                   'pos': pos[key]})
 
-    j = json.dumps(j)
+    data = {'tree': tree_data, 'node_link_data': data}
+    j = json.dumps(data)
 
     return(j)
 
