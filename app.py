@@ -15,7 +15,7 @@ def data():
     import git
 
     import networkx as nx
-    tree = nx.DiGraph()
+    G = nx.DiGraph()
 
     parent = None
 
@@ -32,28 +32,20 @@ def data():
 
     for item in commits[:15]:
         node = "{}".format(get_hash(item))
-        tree.add_node(node)
+        G.add_node(node)
         commit = repo.commit(get_hash(item))
         for parent in commit.parents:
-            tree.add_edge(node, parent.hexsha)
+            G.add_edge(node, parent.hexsha)
 
-    G = tree
-
-    # same layout using matplotlib with no labels
     pos=nx.graphviz_layout(G, prog='dot')
-    #nx.draw(G, pos, with_labels=False, arrows=False)
 
     from networkx.readwrite import json_graph
-    data = json_graph.node_link_data(tree)
+    data = json_graph.node_link_data(G)
+    
+    for node in data['nodes']:
+        node['pos'] = pos[node['id']]
 
-    tree_data=[]
-    for key in pos:
-        tree_data.append({'id': key,
-                  'pos': pos[key]})
-
-    data = {'tree': tree_data, 'node_link_data': data}
     j = json.dumps(data)
-
     return(j)
 
 if __name__ == "__main__":
