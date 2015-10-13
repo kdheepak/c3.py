@@ -23,7 +23,7 @@
 
 <script>
 var w = 1000,
-    h = 1500,
+    h = 500,
     fill = d3.scale.category20();
 
 var vis = d3.select("#chart")
@@ -31,6 +31,8 @@ var vis = d3.select("#chart")
     .attr("width", w)
     .attr("height", h);
 
+function render()
+    {
     d3.json("/data", function(data) {
 
     console.log(data)
@@ -77,8 +79,11 @@ var link = vis.selectAll(".link")
      .transition()
         .duration(500)
         .style('opacity', 1);
-})
+    });
+}
 
+render()
+setInterval(render, 2000)
     </script>
 </body>
 </html>
