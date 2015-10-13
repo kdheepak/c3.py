@@ -28,16 +28,29 @@ def data():
     commits = loginfo.split("\n\ncommit ")
     commits[0] = commits[0].replace("commit ", '')
 
-    for item in commits[:5]:
+    for item in commits[:15]:
         node = "{}".format(get_hash(item))
         tree.add_node(node)
         commit = repo.commit(get_hash(item))
         for parent in commit.parents:
             tree.add_edge(node, parent.hexsha)
 
-    from networkx.readwrite import json_graph
-    data = json_graph.node_link_data(tree)
-    j = json.dumps(data)
+    G = tree
+    nx.write_dot(G,'test.dot')
+
+    # same layout using matplotlib with no labels
+    pos=nx.graphviz_layout(G,prog='dot')
+    nx.draw(G,pos,with_labels=False,arrows=False)
+
+    #from networkx.readwrite import json_graph
+    #data = json_graph.node_link_data(tree)
+    j=[]
+    for key in pos:
+        j.append({'id': key,
+                  'pos': pos[key]})
+
+    j = json.dumps(j)
+
     return(j)
 
 if __name__ == "__main__":

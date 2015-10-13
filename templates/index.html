@@ -25,34 +25,23 @@ var vis = d3.select("#chart")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("/data", function(json) {
-
-  var link = vis.selectAll("line.link")
-      .data(json.links)
-    .enter().append("svg:line")
-      .attr("class", "link")
-      .style("stroke-width", function(d) { return Math.sqrt(d.value); })
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+d3.json("/data", function(data) {
 
   var node = vis.selectAll("circle.node")
-      .data(json.nodes)
+      .data(data)
     .enter().append("svg:circle")
       .attr("class", "node")
-      .attr("cx", function(d, i) { return 100; })
-      .attr("cy", function(d, i) { return 100+i*100; })
+      .attr("cx", function(d, i) { return d.pos[0]; })
+      .attr("cy", function(d, i) { return d.pos[1]; })
       .attr("r", 10)
-      .style("fill", function(d) { return fill(d.group); });
+
+  var link = vis.selectAll(".link")
+      .data(edges)
+    .enter().append("line")
+      .attr("class", "link");
 
   node.append("svg:title")
       .text(function(d) { return d.name; });
-
-  vis.style("opacity", 1e-6)
-    .transition()
-      .duration(1000)
-      .style("opacity", 1);
 });
 
     </script>
