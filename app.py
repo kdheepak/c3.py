@@ -6,7 +6,7 @@ from flask import request
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-repo_path = ''
+repo_path = '.'
 
 app = Flask(__name__)
 
@@ -17,12 +17,7 @@ def my_form_post():
         repo_path = request.form['text']
         return render_template("index.html")
     else:
-        return render_template_string("""
-    <form action="." method="POST">
-        <input type="text" name="text">
-        <input type="submit" name="my-form" value="Send">
-    </form>
-                """)
+        return render_template("index.html")
 
 def branch_name(node, repo):
     for b in repo.branches:
@@ -93,7 +88,7 @@ if __name__ == "__main__":
     port = 5000
 
     # Open a web browser pointing at the app.
-    os.system("open http://localhost:{0}".format(port))
+    # os.system("open http://localhost:{0}".format(port))
 
     # Set up the development server on port 8000.
     app.debug = True
