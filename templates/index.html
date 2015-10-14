@@ -66,30 +66,23 @@ var linkUpdateSelection = vis.selectAll(".link")
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
     .attr("x2", function(d, i) {return PosX(d, i, "target");}) // x position of the second end of the line
     .attr("y2", function(d, i) {return PosY(d, i, "target");})    // y position of the second end of the line
-     .style('opacity', 0)
-     .transition()
-        .duration(500)
-        .style('opacity', 1);
+     .style('opacity', 0);
 
+     linkUpdateSelection
+        .transition()
+        .delay(550)
+        .style('opacity', 1);
 
   var nodeUpdateSelection = vis.selectAll("circle.node")
       .data(data.nodes);
 
     nodeUpdateSelection.exit().remove();
 
-    nodeUpdateSelection
-      .attr("class", "node")
-      .transition()
-      .attr("cx", function(d, i) { return d.pos[0]; })
-      .attr("cy", function(d, i) { return h-d.pos[1]; })
-      .attr("r", 10)
-      .attr('fill', 'red')
-
     nodeUpdateSelection.enter().append("svg:circle")
       .attr("class", "node")
       .attr("cx", function(d, i) { return d.pos[0]; })
       .attr("cy", function(d, i) { return h-d.pos[1]; })
-      .attr("r", 10)
+      .attr("r", 0)
       .attr('fill', 'red')
       .on('mouseover', function(d,i) {
         d3.select(this).transition()
@@ -104,18 +97,18 @@ var linkUpdateSelection = vis.selectAll(".link")
           .attr("r", 10)
       });
 
+    nodeUpdateSelection.transition()
+      .attr("class", "node")
+      .attr("cx", function(d, i) { return d.pos[0]; })
+      .attr("cy", function(d, i) { return h-d.pos[1]; })
+      .attr('fill', 'red')
+        .delay(500)
+        .attr("r", 10)
+
     var textUpdateSelection = vis.selectAll("text")
         .data(data.nodes)
 
     textUpdateSelection.exit().remove();
-
-    textUpdateSelection
-      .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
-                 .attr("x", function(d) { return 15+d.pos[0]; })
-                 .attr("y", function(d) { return h-d.pos[1]+5; })
-                 .attr("font-family", "sans-serif")
-                 .attr("font-size", "15px")
-                 .attr("fill", "blue")
 
     textUpdateSelection
     .enter().append("text")
@@ -126,9 +119,17 @@ var linkUpdateSelection = vis.selectAll(".link")
                  .attr("font-size", "15px")
                  .attr("fill", "blue")
                  .style('fill-opacity', 0)
+
+    textUpdateSelection
+      .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
                  .transition()
-                    .duration(1000)
-                    .style('fill-opacity', 1);
+                    .delay(500)
+                    .style('fill-opacity', 1)
+                 .attr("x", function(d) { return 15+d.pos[0]; })
+                 .attr("y", function(d) { return h-d.pos[1]+5; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "15px")
+                 .attr("fill", "blue")
 
 
     }); //end d3.json
