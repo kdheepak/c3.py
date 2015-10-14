@@ -79,22 +79,11 @@ var linkUpdateSelection = vis.selectAll(".link")
 
     nodeUpdateSelection
       .attr("class", "node")
+      .transition()
       .attr("cx", function(d, i) { return d.pos[0]; })
       .attr("cy", function(d, i) { return h-d.pos[1]; })
       .attr("r", 10)
       .attr('fill', 'red')
-      .on('mouseover', function(d,i) {
-        d3.select(this).transition()
-          .ease('cubic-out')
-          .duration('200')
-          .attr("r", 15)
-      })
-      .on('mouseout', function(d,i) {
-        d3.select(this).transition()
-          .ease('cubic-out')
-          .duration('200')
-          .attr("r", 10)
-      });
 
     nodeUpdateSelection.enter().append("svg:circle")
       .attr("class", "node")
