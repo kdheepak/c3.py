@@ -72,7 +72,6 @@ var linkUpdateSelection = vis.selectAll(".link")
     .attr("class", "link")
     .style("stroke", "black")  // colour the line
         .transition()
-        .delay(550)
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
     .attr("x2", function(d, i) {return PosX(d, i, "target");}) // x position of the second end of the line
@@ -108,7 +107,6 @@ var linkUpdateSelection = vis.selectAll(".link")
       .attr("cx", function(d, i) { return d.pos[0]; })
       .attr("cy", function(d, i) { return h-d.pos[1]; })
       .attr('fill', 'red')
-        .delay(500)
         .attr("r", 10)
 
     var textUpdateSelection = vis.selectAll("text.message")
@@ -130,7 +128,6 @@ var linkUpdateSelection = vis.selectAll(".link")
     textUpdateSelection
       .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
                  .transition()
-                    .delay(500)
                     .style('fill-opacity', 1)
                  .attr("x", function(d) { return 15+d.pos[0]; })
                  .attr("y", function(d) { return h-d.pos[1]+5; })
