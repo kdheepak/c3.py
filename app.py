@@ -15,7 +15,7 @@ def my_form_post():
     global repo_path
     if request.method == 'POST':
         repo_path = request.form['text']
-        return render_template("index.html")
+        return ('', 204)
     else:
         return render_template("index.html")
 
