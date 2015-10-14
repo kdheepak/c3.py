@@ -7,14 +7,18 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 repo_path = '.'
+import networkx as nx
+G = nx.DiGraph()
 
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def my_form_post():
     global repo_path
+    global G
     if request.method == 'POST':
         repo_path = request.form['text']
+        G = nx.DiGraph()
         return ('', 204)
     else:
         return render_template("index.html")
@@ -51,12 +55,9 @@ def data():
     import json
     import git
 
-    import networkx as nx
-    G = nx.DiGraph()
-
     repo = git.Repo(repo_path)
 
-
+    global G
     commit = repo.head.commit
 
     breadth_first_add(G, commit, 10)
