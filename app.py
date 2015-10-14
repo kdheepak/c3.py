@@ -61,7 +61,6 @@ def data():
 
     breadth_first_add(G, commit, 10)
 
-    nx.write_dot(G,'test.dot')
     pos=nx.graphviz_layout(G, prog='dot')
 
     from networkx.readwrite import json_graph
