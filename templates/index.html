@@ -23,8 +23,10 @@
 
 <script>
 var w = 1000,
-    h = 500,
+    H = 50,
     fill = d3.scale.category20();
+
+var h = H;
 
 var vis = d3.select("#chart")
   .append("svg:svg")
@@ -35,6 +37,11 @@ var vis = d3.select("#chart")
 function render()
     {
     d3.json("/data", function(data) {
+
+
+    h = H*1.45*data.nodes.length
+
+        vis.attr("height", h)
 
   var nodeUpdateSelection = vis.selectAll("circle.node")
       .data(data.nodes);
