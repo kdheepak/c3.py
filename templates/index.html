@@ -87,7 +87,7 @@ var linkUpdateSelection = vis.selectAll(".link")
         .style('opacity', 1);
 
   var nodeUpdateSelection = vis.selectAll("circle.node")
-      .data(data.nodes);
+      .data(data.nodes, function(d) {return d.id});
 
     nodeUpdateSelection.exit().remove();
 
