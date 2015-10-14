@@ -71,11 +71,11 @@ def data():
 
     for node in data['nodes']:
         if branch_name(node['id'], repo):
-            data[branch_name(node['id'], repo)] = pos[node['id']]
+            data[branch_name(node['id'], repo)] = node['id']
             data['labels'].append(branch_name(node['id'], repo))
         if head_name(node['id'], repo):
-            data[head_name(node['id'], repo)] = pos[node['id']]
-            data['labels'].append(head_name(node['id'], repo))
+            data[head_name(node['id'], repo)] = node['id']
+            #data['labels'].append(head_name(node['id'], repo))
 
         node['pos'] = pos[node['id']]
 
