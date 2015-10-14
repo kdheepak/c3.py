@@ -28,7 +28,7 @@ def branch_name(node, repo):
     return False
 
 def head_name(node, repo):
-    if node == repo.active_branch.commit.hexsha:
+    if node == repo.head.commit.hexsha:
         return "HEAD"
 
 
@@ -57,7 +57,7 @@ def data():
     repo = git.Repo(repo_path)
 
 
-    commit = repo.active_branch.commit
+    commit = repo.head.commit
 
     breadth_first_add(G, commit, 10)
 
