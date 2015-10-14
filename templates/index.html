@@ -146,21 +146,25 @@ var labelPosY = function(d) { return data[d][1]; }
 
     labelUpdateSelection.exit().remove()
 
-    labelUpdateSelection
+    labelUpdateSelection.enter().append("text")
       .text(function(d) { return d })
+                    .style('fill-opacity', 0)
      .attr("x", function(d, i) { return data[d][0]- i*50 - 75; })
      .attr("y", function(d, i) { return h-data[d][1] + 5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
      .attr("font-size", "15px")
 
-    labelUpdateSelection.enter().append("text")
+    labelUpdateSelection
       .text(function(d) { return d })
+                 .transition()
+                    .style('fill-opacity', 1)
      .attr("x", function(d, i) { return data[d][0]- i*50 - 75; })
      .attr("y", function(d, i) { return h-data[d][1] + 5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
      .attr("font-size", "15px")
+
 
     }); //end d3.json
 } //end render
