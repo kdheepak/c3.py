@@ -28,6 +28,7 @@ var w = 1000,
 
 var vis = d3.select("#chart")
   .append("svg:svg")
+    .attr("style", "outline: thin solid red;")   //This will do the job
     .attr("width", w)
     .attr("height", h);
 
@@ -35,7 +36,6 @@ function render()
     {
     d3.json("/data", function(data) {
 
-    console.log(data)
   var nodeUpdateSelection = vis.selectAll("circle.node")
       .data(data.nodes);
 
@@ -79,6 +79,7 @@ var linkUpdateSelection = vis.selectAll(".link")
 
     linkUpdateSelection
     .enter().append("line")          // attach a line
+    .attr("class", "link")
     .style("stroke", "black")  // colour the line
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
