@@ -38,10 +38,9 @@ function render()
     {
     d3.json("/data", function(data) {
 
-
     h = H*1.45*data.nodes.length
 
-        vis.attr("height", h)
+        vis.attr("height", h);
 
   var nodeUpdateSelection = vis.selectAll("circle.node")
       .data(data.nodes);
