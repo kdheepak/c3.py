@@ -27,15 +27,15 @@ var w = 750,
 var h = H;
 
 var vis = d3.select("#chart")
-  .append("svg:svg")
+  .append("svg:svg");
 
 d3.json("/data", function(data) {
 
-h = H*1.45*data.nodes.length
+h = H*1.45*data.nodes.length;
 
     vis.attr("height", h)
     .attr("style", "outline: thin solid red;")   //This will do the job
-    .attr("width", w)
+    .attr("width", w);
 
 });
 
@@ -44,26 +44,26 @@ function render()
     {
     d3.json("/data", function(data) {
 
-    h = H*1.45*data.nodes.length
+    h = H*1.45*data.nodes.length;
 
         vis.attr("height", h);
 
 
-var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; }
-var PosY = function(d, i, location) { return h-data.nodes[d[location]].pos[1]; }
+var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; };
+var PosY = function(d, i, location) { return h-data.nodes[d[location]].pos[1]; };
 
 var reverseMap = {};
 
     for(var i=0; i<data.nodes.length; i++){
-    var p = data.nodes[i]
-    var hash = p.id
-    reverseMap[hash] = p
+    var p = data.nodes[i];
+    var hash = p.id;
+    reverseMap[hash] = p;
     };
 
 var linkUpdateSelection = vis.selectAll(".link")
       .data(data.links);
 
-    linkUpdateSelection.exit().remove()
+    linkUpdateSelection.exit().remove();
 
     linkUpdateSelection
     .enter().append("line")          // attach a line
@@ -114,10 +114,10 @@ var linkUpdateSelection = vis.selectAll(".link")
       .attr("cx", function(d, i) { return d.pos[0]; })
       .attr("cy", function(d, i) { return h-d.pos[1]; })
       .attr('fill', function(d, i) {if (reverseMap[d.id]==reverseMap[data['HEAD']]){return '#99FF66';} else {return 'red';}} )
-        .attr("r", 10)
+        .attr("r", 10);
 
     var textUpdateSelection = vis.selectAll("text.message")
-        .data(data.nodes)
+        .data(data.nodes);
 
     textUpdateSelection.exit().remove();
 
@@ -130,7 +130,7 @@ var linkUpdateSelection = vis.selectAll(".link")
                  .attr("class", "message")
                  .attr("font-size", "15px")
                  .attr("fill", "blue")
-                 .style('fill-opacity', 0)
+                 .style('fill-opacity', 0);
 
     textUpdateSelection
       .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
@@ -141,16 +141,16 @@ var linkUpdateSelection = vis.selectAll(".link")
                  .attr("class", "message")
                  .attr("font-family", "sans-serif")
                  .attr("font-size", "15px")
-                 .attr("fill", "blue")
+                 .attr("fill", "blue");
 
 
     var labelUpdateSelection = vis.selectAll("text.labels")
-        .data(data.labels)
+        .data(data.labels);
 
-var labelPosX = function(d) { return reverseMap[d].pos[0]; }
-var labelPosY = function(d) { return reverseMap[d].pos[1]; }
+var labelPosX = function(d) { return reverseMap[d].pos[0]; };
+var labelPosY = function(d) { return reverseMap[d].pos[1]; };
 
-    labelUpdateSelection.exit().remove()
+    labelUpdateSelection.exit().remove();
 
     labelUpdateSelection.enter().append("text")
       .text(function(d) { return d })
@@ -159,7 +159,7 @@ var labelPosY = function(d) { return reverseMap[d].pos[1]; }
      .attr("y", function(d, i) { return h-data[d][1] + 5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
-     .attr("font-size", "15px")
+     .attr("font-size", "15px");
 
     labelUpdateSelection
       .text(function(d) { return d })
@@ -169,14 +169,14 @@ var labelPosY = function(d) { return reverseMap[d].pos[1]; }
      .attr("y", function(d, i) { return h-labelPosY(data[d]) + 5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
-     .attr("font-size", "15px")
+     .attr("font-size", "15px");
 
 
     }); //end d3.json
 } //end render
 
-render()
-setInterval(render, 2000)
+render();
+setInterval(render, 2000);
     </script>
 </body>
 </html>
