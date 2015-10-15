@@ -60,7 +60,7 @@ var reverseMap = {};
     reverseMap[hash] = p;
     };
 
-function poslink(d, i){ return PosX(d, i, "source")+PosY(d, i ,"source")+PosX(d, i, "target")+PosY(d, i ,"target"); }
+    function poslink(d, i){ try{ return data.nodes[d.source].id + "" + data.nodes[d.target].id;} catch(err) {console.log(err); } }
 
 var linkUpdateSelection = vis.selectAll(".link")
     .data(data.links, poslink);
