@@ -47,8 +47,7 @@ function render()
 
         vis.attr("height", h);
 
-
-    var transitiontime = 50;
+    var transitiontime = 0;
 
 var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; };
 var PosY = function(d, i, location) { return h-data.nodes[d[location]].pos[1]; };
@@ -62,7 +61,9 @@ var reverseMap = {};
     };
 
 var linkUpdateSelection = vis.selectAll(".link")
-      .data(data.links);
+    .data(data.links, function(d){ 
+            return d.source+""+d.target; 
+            });
 
     linkUpdateSelection.exit().remove();
 
@@ -81,10 +82,21 @@ var linkUpdateSelection = vis.selectAll(".link")
     .style("stroke", "black")  // colour the line
         .transition()
         .delay(function(d,i) {return i*transitiontime})
+        .style('opacity', 0);
+
+     linkUpdateSelection
+    .attr("class", "link")
+    .style("stroke", "black")  // colour the line
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
     .attr("x2", function(d, i) {return PosX(d, i, "target");}) // x position of the second end of the line
     .attr("y2", function(d, i) {return PosY(d, i, "target");})    // y position of the second end of the line
+
+     linkUpdateSelection
+    .attr("class", "link")
+    .style("stroke", "black")  // colour the line
+        .transition()
+        .delay(50+transitiontime)
         .style('opacity', 1);
 
   var nodeUpdateSelection = vis.selectAll("circle.node")

@@ -60,7 +60,7 @@ def data():
     global G
     commit = repo.head.commit
 
-    breadth_first_add(G, commit, 10)
+    breadth_first_add(G, commit, 100)
 
     pos=nx.graphviz_layout(G, prog='dot')
 
