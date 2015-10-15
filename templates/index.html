@@ -82,8 +82,6 @@ var linkUpdateSelection = vis.selectAll(".link")
     .style("stroke", "black")  // colour the line
         .transition()
         .delay(function(d,i) {return i*transitiontime})
-    .attr("class", "link")
-    .style("stroke", "black")  // colour the line
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
     .attr("x2", function(d, i) {return PosX(d, i, "target");}) // x position of the second end of the line
