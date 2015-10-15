@@ -20,7 +20,7 @@
 <script src='http://d3js.org/d3.v3.min.js'></script>
 
 <script>
-var w = 750,
+var w = 1500,
     H = 50,
     fill = d3.scale.category20();
 
@@ -34,7 +34,6 @@ d3.json("/data", function(data) {
 h = H*1.45*data.nodes.length;
 
     vis.attr("height", h)
-    .attr("style", "outline: thin solid red;")   //This will do the job
     .attr("width", w);
 
 });
@@ -48,6 +47,8 @@ function render()
 
         vis.attr("height", h);
 
+
+    var transitiontime = 50;
 
 var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; };
 var PosY = function(d, i, location) { return h-data.nodes[d[location]].pos[1]; };
@@ -79,6 +80,7 @@ var linkUpdateSelection = vis.selectAll(".link")
     .attr("class", "link")
     .style("stroke", "black")  // colour the line
         .transition()
+        .delay(function(d,i) {return i*transitiontime})
     .attr("x1", function(d, i) {return PosX(d, i, "source");}) // x position of the first end of the line
     .attr("y1", function(d, i) {return PosY(d, i, "source");}) // y position of the first end of the line
     .attr("x2", function(d, i) {return PosX(d, i, "target");}) // x position of the second end of the line
@@ -110,14 +112,15 @@ var linkUpdateSelection = vis.selectAll(".link")
       });
 
     nodeUpdateSelection.transition()
-      .attr("class", "node")
-      .attr("cx", function(d, i) { return d.pos[0]; })
-      .attr("cy", function(d, i) { return h-d.pos[1]; })
-      .attr('fill', function(d, i) {if (reverseMap[d.id]==reverseMap[data['HEAD']]){return '#99FF66';} else {return 'red';}} )
+        .delay(function(d,i) {return i*transitiontime})
+        .attr("class", "node")
+        .attr("cx", function(d, i) { return d.pos[0]; })
+        .attr("cy", function(d, i) { return h-d.pos[1]; })
+        .attr('fill', function(d, i) {if (reverseMap[d.id]==reverseMap[data['HEAD']]){return '#99FF66';} else {return 'red';}} )
         .attr("r", 10);
 
     var textUpdateSelection = vis.selectAll("text.message")
-        .data(data.nodes);
+        .data(data.nodes, function(d) {return d.id});
 
     textUpdateSelection.exit().remove();
 
@@ -135,6 +138,7 @@ var linkUpdateSelection = vis.selectAll(".link")
     textUpdateSelection
       .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
                  .transition()
+                 .delay(function(d,i) {return i*transitiontime})
                     .style('fill-opacity', 1)
                  .attr("x", function(d) { return 15+d.pos[0]; })
                  .attr("y", function(d) { return h-d.pos[1]+5; })
@@ -155,7 +159,7 @@ var labelPosY = function(d) { return reverseMap[d].pos[1]; };
     labelUpdateSelection.enter().append("text")
       .text(function(d) { return d })
                     .style('fill-opacity', 0)
-     .attr("x", function(d, i) { return data[d][0]- i*50 - 75; })
+     .attr("x", function(d, i) { return data[d][0]- 75; })
      .attr("y", function(d, i) { return h-data[d][1] + 5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
@@ -164,9 +168,10 @@ var labelPosY = function(d) { return reverseMap[d].pos[1]; };
     labelUpdateSelection
       .text(function(d) { return d })
                  .transition()
+                 .delay(function(d,i) {return i*transitiontime})
                     .style('fill-opacity', 1)
-     .attr("x", function(d, i) { return labelPosX(data[d])- i*50 - 75; })
-     .attr("y", function(d, i) { return h-labelPosY(data[d]) + 5; })
+     .attr("x", function(d, i) { return labelPosX(data[d]) - 50 ; })
+     .attr("y", function(d, i) { return h-labelPosY(data[d]) - 25 + i*5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
      .attr("font-size", "15px");
