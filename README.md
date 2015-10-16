@@ -13,3 +13,11 @@ I highly welcome contributions. I would like to learn how to use d3.js / flask b
 # Installation
 
     pip install -r requirements.txt
+
+# Running
+
+Run `python app.py` to start the application. 
+
+Open `http://localhost:5000` to view the live git log of the current repo. You can enter the path to other repos in the text field.
+
+This application is meant for use only on a local machine
