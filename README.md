@@ -12,8 +12,4 @@ I highly welcome contributions. I would like to learn how to use d3.js / flask b
 
 # Installation
 
-    pip install flask
-    brew install graphviz
-    pip install pygraphviz
-    pip install gitpython
-    pip install networkx
+    pip install -r requirements.txt
