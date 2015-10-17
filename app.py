@@ -35,6 +35,8 @@ def head_name(node, repo):
 def breadth_first_add(networkx_graph, commit, N):
     """
     Traverse a graph breadth first and add commits on the way
+
+    N is number of commmits you want to traverse
     """
     # add the commit to a queue
     queue = []
