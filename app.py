@@ -88,9 +88,9 @@ def data():
     maximumX, maximumY = find_max_xy(position)
 
     if len(diff)>0:
-        position['diff'] = [200+300,maximumY+200]
+        position['diff'] = [200+300,maximumY+100]
     if len(workingdiff)>0:
-        position['diff'] = [200,maximumY+200]
+        position['diff'] = [200,maximumY+100]
 
     data = json_graph.node_link_data(networkx_graph)
 
