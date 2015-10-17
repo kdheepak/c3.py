@@ -29,10 +29,20 @@ var w = 1500,
 var h = H;
 
 var wdiff = d3.select("#wdiff")
+        .style("display", "inline-block")
+        .style("float", "left")
+        .style("width", "50%")
+        .style("height", "100px")
+        .style("overflow", "auto")
         .append("pre")
         .append("code").attr("id", "codewdiff");
 
 var diff = d3.select("#diff")
+        .style("display", "inline-block")
+        .style("float", "right")
+        .style("width", "50%")
+        .style("height", "100px")
+        .style("overflow", "auto")
         .append("pre")
         .append("code").attr("id", "codediff");
 
