@@ -84,7 +84,6 @@ def data():
         networkx_graph.add_node("diff", message="diff between previous commit")
     else:
         try:
-            networkx_graph.remove_node("diff")
             position['diff'] = [0,0]
         except Exception, e:
             print(e)
