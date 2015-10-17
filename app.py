@@ -75,22 +75,19 @@ def data():
 
     position=nx.graphviz_layout(networkx_graph, prog='dot')
 
+    maximumX, maximumY = find_max_xy(position)
+
     if len(workingdiff) > 0:
         networkx_graph.add_node("diff", message="working")
+        position['diff'] = [200+300,maximumY+100]
     elif len(diff) > 0:
         networkx_graph.add_node("diff", message="diff between previous commit")
     else:
         try:
             networkx_graph.remove_node("diff")
+            position['diff'] = [0,0]
         except Exception, e:
             print(e)
-    
-    maximumX, maximumY = find_max_xy(position)
-
-    if len(diff)>0:
-        position['diff'] = [200+300,maximumY+100]
-    if len(workingdiff)>0:
-        position['diff'] = [200,maximumY+100]
 
     data = json_graph.node_link_data(networkx_graph)
 
