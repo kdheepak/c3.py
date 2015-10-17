@@ -15,6 +15,8 @@
         <input type="submit" name="my-form" value="Send">
     </form>
 
+    <div id="wdiff"></div>
+    <div id="diff"></div>
     <div id="chart"></div>
 
 <script src='http://d3js.org/d3.v3.min.js'></script>
@@ -25,6 +27,14 @@ var w = 1500,
     fill = d3.scale.category20();
 
 var h = H;
+
+var wdiff = d3.select("#wdiff")
+        .append("pre")
+        .append("code").attr("id", "codewdiff");
+
+var diff = d3.select("#diff")
+        .append("pre")
+        .append("code").attr("id", "codediff");
 
 var vis = d3.select("#chart")
   .append("svg:svg");
@@ -42,6 +52,9 @@ h = H*1.45*data.nodes.length;
 function render()
     {
     d3.json("/data", function(data) {
+
+document.getElementById('codewdiff').innerHTML = data.wdiff;
+document.getElementById('codediff').innerHTML = data.diff;
 
     h = H*1.45*data.nodes.length;
 
