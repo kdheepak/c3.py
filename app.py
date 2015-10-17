@@ -3,19 +3,16 @@ from flask import render_template
 from flask import render_template_string
 from flask import request
 
+from networkx.readwrite import json_graph
+import networkx as nx
+
 import git
 import json
 
 app = Flask(__name__)
 
-repo_path = '.'
-import networkx as nx
-G = nx.DiGraph()
-
-app = Flask(__name__)
-
 @app.route('/', methods=['POST', 'GET'])
-def my_form_post():
+def form_post():
     if request.method == 'POST':
         repo_path = request.form['text']
         return render_template("index.html", repo_path=repo_path)
@@ -26,61 +23,87 @@ def branch_name(node, repo):
     for b in repo.branches:
         if b.commit.hexsha == node:
             return b.name
-        else:
-            pass
-    return False
+    return None
 
 def head_name(node, repo):
     if node == repo.head.commit.hexsha:
         return "HEAD"
+    else:
+        return None
 
 
-def breadth_first_add(G, commit, N):
+def breadth_first_add(networkx_graph, commit, N):
+    """
+    Traverse a graph breadth first and add commits on the way
+    """
+    # add the commit to a queue
     queue = []
     queue.append(commit)
-    G.add_node(commit.hexsha, message=commit.message.split("\n")[0])
 
-    while len(G.nodes()) < N:
+    # add the commit to the graph
+    networkx_graph.add_node(commit.hexsha, message=commit.message.split("\n")[0])
+
+    while len(networkx_graph.nodes()) < N:
+
+        # if queue is empty -> break
         if len(queue)==0:
             break
+
+        # get the commit in the queue and add all its parents to the graph and to the queue
         commit = queue.pop()
         for c in commit.parents:
-            G.add_edge(commit.hexsha, c.hexsha)
-            G.add_node(c.hexsha, message=c.message.split("\n")[0])
+            networkx_graph.add_edge(commit.hexsha, c.hexsha)
+            networkx_graph.add_node(c.hexsha, message=c.message.split("\n")[0])
             queue.append(c)
 
 @app.route("/data")
 def data():
     repo_path = request.args.get('repo_path', '')
-
     repo = git.Repo(repo_path)
 
-    G = nx.DiGraph()
+    networkx_graph = nx.DiGraph()
 
     commit = repo.head.commit
 
     diff = commit.diff(create_patch=True)   
     workingdiff = commit.diff(None, create_patch=True)     
     
-    breadth_first_add(G, commit, 200)
+    breadth_first_add(networkx_graph, commit, 200)
 
-    pos=nx.graphviz_layout(G, prog='dot')
+    pos=nx.graphviz_layout(networkx_graph, prog='dot')
 
-    from networkx.readwrite import json_graph
-    data = json_graph.node_link_data(G)
+    data = json_graph.node_link_data(networkx_graph)
 
+    store_branch_labels(data, pos, repo)
+
+    store_diff_in(data, diff, workingdiff)
+
+    j = json.dumps(data)
+    return(j)
+
+def store_branch_labels(data, pos, repo):
     data['labels'] = []
 
+    # search all the nodes if they are either "HEAD" or branch names
     for node in data['nodes']:
         if branch_name(node['id'], repo):
-            data[branch_name(node['id'], repo)] = node['id']
-            data['labels'].append(branch_name(node['id'], repo))
-        if head_name(node['id'], repo):
-            data[head_name(node['id'], repo)] = node['id']
-            #data['labels'].append(head_name(node['id'], repo))
 
+            # e.g. data["master"] = 8e007c2a86789b88ffe5ce350746750bf78bfdfb
+            data[branch_name(node['id'], repo)] = node['id']
+
+            # e.g. data['labels'] = ['HEAD', 'master']
+            data['labels'].append(branch_name(node['id'], repo))
+
+        if head_name(node['id'], repo):
+
+            # e.g. data["HEAD"] = 8e007c2a86789b88ffe5ce350746750bf78bfdfb
+            data[head_name(node['id'], repo)] = node['id']
+
+        # store the position of every node
         node['pos'] = pos[node['id']]
 
+
+def store_diff_in(data, diff, workingdiff):
     try:
         data['diff'] = diff[0].diff
     except:
@@ -95,9 +118,7 @@ def data():
         data['wdiff'] = workingdiff[0].diff
     else:
         data['wdiff'] = ''
-        
-    j = json.dumps(data)
-    return(j)
+
 
 if __name__ == "__main__":
     import os
@@ -107,7 +128,6 @@ if __name__ == "__main__":
     # Open a web browser pointing at the app.
     # os.system("open http://localhost:{0}".format(port))
 
-    # Set up the development server on port 8000.
     app.config['DEBUG'] = True
     app.debug = True
     app.run(port=port)
