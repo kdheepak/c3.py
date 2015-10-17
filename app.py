@@ -72,16 +72,43 @@ def data():
     
     breadth_first_add(networkx_graph, commit, 200)
 
+
     position=nx.graphviz_layout(networkx_graph, prog='dot')
+
+    if len(workingdiff) > 0:
+        networkx_graph.add_node("diff", message="working")
+    elif len(diff) > 0:
+        networkx_graph.add_node("diff", message="diff between previous commit")
+    else:
+        try:
+            networkx_graph.remove_node("diff")
+        except Exception, e:
+            print(e)
+    
+    maximumX, maximumY = find_max_xy(position)
+
+    if len(diff)>0:
+        position['diff'] = [200+300,maximumY+200]
+    if len(workingdiff)>0:
+        position['diff'] = [200,maximumY+200]
 
     data = json_graph.node_link_data(networkx_graph)
 
     store_branch_labels(data, position, repo)
 
-    store_diff_in(data, diff, workingdiff)
+
+    # store_diff_in(data, diff, workingdiff)
 
     j = json.dumps(data)
     return(j)
+
+def find_max_xy(position):
+    tempx = 0
+    tempy = 0
+    for node in position:
+        tempx = max(position[node][0], tempx)
+        tempy = max(position[node][1], tempy)
+    return tempx, tempy
 
 def store_branch_labels(data, position, repo):
     data['labels'] = []
@@ -133,3 +160,4 @@ if __name__ == "__main__":
     app.config['DEBUG'] = True
     app.debug = True
     app.run(port=port)
+
