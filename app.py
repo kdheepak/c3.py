@@ -7,7 +7,6 @@ import git
 import json
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 repo_path = '.'
 import networkx as nx
@@ -109,5 +108,6 @@ if __name__ == "__main__":
     # os.system("open http://localhost:{0}".format(port))
 
     # Set up the development server on port 8000.
+    app.config['DEBUG'] = True
     app.debug = True
     app.run(port=port)
