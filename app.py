@@ -70,18 +70,18 @@ def data():
     
     breadth_first_add(networkx_graph, commit, 200)
 
-    pos=nx.graphviz_layout(networkx_graph, prog='dot')
+    position=nx.graphviz_layout(networkx_graph, prog='dot')
 
     data = json_graph.node_link_data(networkx_graph)
 
-    store_branch_labels(data, pos, repo)
+    store_branch_labels(data, position, repo)
 
     store_diff_in(data, diff, workingdiff)
 
     j = json.dumps(data)
     return(j)
 
-def store_branch_labels(data, pos, repo):
+def store_branch_labels(data, position, repo):
     data['labels'] = []
 
     # search all the nodes if they are either "HEAD" or branch names
@@ -100,7 +100,7 @@ def store_branch_labels(data, pos, repo):
             data[head_name(node['id'], repo)] = node['id']
 
         # store the position of every node
-        node['pos'] = pos[node['id']]
+        node['pos'] = position[node['id']]
 
 
 def store_diff_in(data, diff, workingdiff):
