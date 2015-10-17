@@ -3,6 +3,9 @@ from flask import render_template
 from flask import render_template_string
 from flask import request
 
+import git
+import json
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -52,8 +55,6 @@ def breadth_first_add(G, commit, N):
 
 @app.route("/data")
 def data():
-    import json
-    import git
 
     repo = git.Repo(repo_path)
 
