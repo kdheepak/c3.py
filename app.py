@@ -129,24 +129,6 @@ def store_branch_labels(data, position, repo):
         # store the position of every node
         node['pos'] = position[node['id']]
 
-
-def store_diff_in(data, diff, workingdiff):
-    try:
-        data['diff'] = diff[0].diff
-    except:
-        data['diff'] = ''
-
-    try:
-        data['wdiff'] = workingdiff[0].diff
-    except:
-        data['wdiff'] = ''
-        
-    if data['diff'] != data['wdiff']:
-        data['wdiff'] = workingdiff[0].diff
-    else:
-        data['wdiff'] = ''
-
-
 if __name__ == "__main__":
     import os
 
