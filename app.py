@@ -58,8 +58,14 @@ def data():
     repo = git.Repo(repo_path)
 
     global G
+
     commit = repo.head.commit
 
+
+    
+    diff = commit.diff(create_patch=True)   
+    workingdiff = commit.diff(None, create_patch=True)     
+    
     breadth_first_add(G, commit, 100)
 
     pos=nx.graphviz_layout(G, prog='dot')
@@ -79,6 +85,21 @@ def data():
 
         node['pos'] = pos[node['id']]
 
+    try:
+        data['diff'] = diff[0].diff
+    except:
+        data['diff'] = ''
+
+    try:
+        data['wdiff'] = workingdiff[0].diff
+    except:
+        data['wdiff'] = ''
+        
+    if data['diff'] != data['wdiff']:
+        data['wdiff'] = workingdiff[0].diff
+    else:
+        data['wdiff'] = ''
+        
     j = json.dumps(data)
     return(j)
 
