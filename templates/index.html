@@ -51,7 +51,7 @@ h = H*1.45*data.nodes.length;
 
 function render()
     {
-    d3.json("/data", function(data) {
+    d3.json("/data?repo_path={{repo_path}}", function(data) {
 
 document.getElementById('codewdiff').innerHTML = data.wdiff;
 document.getElementById('codediff').innerHTML = data.diff;

@@ -17,12 +17,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def my_form_post():
-    global repo_path
-    global G
     if request.method == 'POST':
         repo_path = request.form['text']
-        G = nx.DiGraph()
-        return ('', 204)
+        return render_template("index.html", repo_path=repo_path)
     else:
         return render_template("index.html")
 
@@ -55,10 +52,11 @@ def breadth_first_add(G, commit, N):
 
 @app.route("/data")
 def data():
+    repo_path = request.args.get('repo_path', '')
 
     repo = git.Repo(repo_path)
 
-    global G
+    G = nx.DiGraph()
 
     commit = repo.head.commit
 
