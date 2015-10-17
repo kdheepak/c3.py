@@ -61,12 +61,10 @@ def data():
 
     commit = repo.head.commit
 
-
-    
     diff = commit.diff(create_patch=True)   
     workingdiff = commit.diff(None, create_patch=True)     
     
-    breadth_first_add(G, commit, 100)
+    breadth_first_add(G, commit, 200)
 
     pos=nx.graphviz_layout(G, prog='dot')
 
