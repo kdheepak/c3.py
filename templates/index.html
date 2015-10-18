@@ -174,8 +174,8 @@ var linkUpdateSelection = vis.selectAll(".link")
     var labelUpdateSelection = vis.selectAll("text.labels")
         .data(data.labels);
 
-var labelPosX = function(d) { return scaleX(reverseMap[d].pos[0]); };
-var labelPosY = function(d) { return scaleY.invert(reverseMap[d].pos[1]); };
+var labelPosX = function(d) { return reverseMap[d].pos[0]; };
+var labelPosY = function(d) { return reverseMap[d].pos[1]; };
 
     labelUpdateSelection.exit().remove();
 
