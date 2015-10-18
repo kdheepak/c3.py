@@ -64,7 +64,7 @@ h = H*1.5*data.nodes.length;
 
     scaleX = d3.scale.linear()
         .range([d3.min(data.nodes, function(d){return d.pos[0]} ), d3.max(data.nodes, function(d){return d.pos[0]} )])
-        .domain([0, w])
+        .domain([0, w/4])
 
 
 var PosX = function(d, i, location) { return scaleX(data.nodes[d[location]].pos[0]); };
