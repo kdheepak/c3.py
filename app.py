@@ -118,11 +118,33 @@ def find_max_xy(position):
         tempy = max(position[node][1], tempy)
     return tempx, tempy
 
+def diff_name(node, repo):
+    for commit in repo.iter_commits():
+        if commit.hexsha == node:
+            return True
+    return False
+
 def store_branch_labels(data, position, repo):
     data['labels'] = []
 
     # search all the nodes if they are either "HEAD" or branch names
+    working_bool = False
+    staged_bool = False
+
     for node in data['nodes']:
+
+
+        if not diff_name(node['id'], repo):
+            if node['color'] == 'pink':
+                data['working'] = node['id']
+                working_bool = True
+            if node['color'] == 'blue':
+                staged_bool = True
+                data['staged'] = node['id']
+
+            # e.g. data['labels'] = ['HEAD', 'master']
+
+
         if branch_name(node['id'], repo):
 
             # e.g. data["master"] = 8e007c2a86789b88ffe5ce350746750bf78bfdfb
@@ -138,6 +160,11 @@ def store_branch_labels(data, position, repo):
 
         # store the position of every node
         node['pos'] = position[node['id']]
+
+    if staged_bool: 
+        data['labels'].append('staged')
+    if working_bool: 
+        data['labels'].append('working')
 
 if __name__ == "__main__":
     import os
