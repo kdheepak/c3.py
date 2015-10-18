@@ -100,7 +100,8 @@ def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
             position['diff'] = [0,0]
         except Exception, e:
             print(e)
-    def find_max_xy(position):
+
+def find_max_xy(position):
     tempx = 0
     tempy = 0
     for node in position:
