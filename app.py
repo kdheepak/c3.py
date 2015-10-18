@@ -100,7 +100,7 @@ def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
         d = diff[i]
         key = d.b_blob.hexsha
         networkx_graph.add_node(key, message=d.b_blob.path, color='blue')
-        position[key] = [200,maximumY+(i)*25+100]
+        position[key] = [100,maximumY+(i)*25+100]
 
 def find_max_xy(position):
     tempx = 0
