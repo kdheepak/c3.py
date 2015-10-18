@@ -19,45 +19,6 @@ def form_post():
     else:
         return render_template("index.html")
 
-def branch_name(node, repo):
-    for b in repo.branches:
-        if b.commit.hexsha == node:
-            return b.name
-    return None
-
-def head_name(node, repo):
-    if node == repo.head.commit.hexsha:
-        return "HEAD"
-    else:
-        return None
-
-
-def breadth_first_add(networkx_graph, commit, N):
-    """
-    Traverse a graph breadth first and add commits on the way
-
-    N is number of commmits you want to traverse
-    """
-    # add the commit to a queue
-    queue = []
-    queue.append(commit)
-
-    # add the commit to the graph
-    networkx_graph.add_node(commit.hexsha, message=commit.message.split("\n")[0])
-
-    while len(networkx_graph.nodes()) < N:
-
-        # if queue is empty -> break
-        if len(queue)==0:
-            break
-
-        # get the commit in the queue and add all its parents to the graph and to the queue
-        commit = queue.pop()
-        for c in commit.parents:
-            networkx_graph.add_edge(commit.hexsha, c.hexsha)
-            networkx_graph.add_node(c.hexsha, message=c.message.split("\n")[0])
-            queue.append(c)
-
 @app.route("/data")
 def data():
     try:
@@ -90,6 +51,33 @@ def data():
     j = json.dumps(data)
     return(j)
 
+def breadth_first_add(networkx_graph, commit, N):
+    """
+    Traverse a graph breadth first and add commits on the way
+
+    N is number of commmits you want to traverse
+    """
+    # add the commit to a queue
+    queue = []
+    queue.append(commit)
+
+    # add the commit to the graph
+    networkx_graph.add_node(commit.hexsha, message=commit.message.split("\n")[0])
+
+    while len(networkx_graph.nodes()) < N:
+
+        # if queue is empty -> break
+        if len(queue)==0:
+            break
+
+        # get the commit in the queue and add all its parents to the graph and to the queue
+        commit = queue.pop()
+        for c in commit.parents:
+            networkx_graph.add_edge(commit.hexsha, c.hexsha)
+            networkx_graph.add_node(c.hexsha, message=c.message.split("\n")[0])
+            queue.append(c)
+
+
 def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
     """
     Add the diff nodes to the tree
@@ -121,6 +109,18 @@ def find_max_xy(position):
         tempx = max(position[node][0], tempx)
         tempy = max(position[node][1], tempy)
     return tempx, tempy
+
+def branch_name(node, repo):
+    for b in repo.branches:
+        if b.commit.hexsha == node:
+            return b.name
+    return None
+
+def head_name(node, repo):
+    if node == repo.head.commit.hexsha:
+        return "HEAD"
+    else:
+        return None
 
 def is_diff_name(node, repo):
     # Check all commits if commit.hexsha == node
