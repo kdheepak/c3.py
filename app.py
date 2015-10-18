@@ -129,7 +129,7 @@ def store_branch_labels(data, position, repo):
 
     for node in data['nodes']:
 
-
+        # store labels for staged and working nodes
         if not diff_name(node['id'], repo):
             if node['color'] == 'pink':
                 data['working'] = node['id']
@@ -137,9 +137,6 @@ def store_branch_labels(data, position, repo):
             if node['color'] == 'blue':
                 staged_bool = True
                 data['staged'] = node['id']
-
-            # e.g. data['labels'] = ['HEAD', 'master']
-
 
         if branch_name(node['id'], repo):
 
