@@ -91,9 +91,17 @@ def data():
     return(j)
 
 def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
-    
+    """
+    Add the diff nodes to the tree
+
+    workingdiff contains list of diff objects of all tracked files
+    diff contains list of diff objects of all staged files
+    """
     maximumX, maximumY = find_max_xy(position)
 
+    # e.g. workingdiff = [git.Diff.diff, git.Diff.diff] 
+    # where git.Diff.diff is the diff object for a particular file
+    # len(workingdiff) is number of files that have been changed
     for i in range(0, len(workingdiff)):
         d = workingdiff[i]
         key = d.b_blob.hexsha
@@ -114,7 +122,8 @@ def find_max_xy(position):
         tempy = max(position[node][1], tempy)
     return tempx, tempy
 
-def diff_name(node, repo):
+def is_diff_name(node, repo):
+    # Check all commits if commit.hexsha == node
     for commit in repo.iter_commits():
         if commit.hexsha == node:
             return True
@@ -130,7 +139,7 @@ def store_branch_labels(data, position, repo):
     for node in data['nodes']:
 
         # store labels for staged and working nodes
-        if not diff_name(node['id'], repo):
+        if not is_diff_name(node['id'], repo):
             if node['color'] == 'pink':
                 data['working'] = node['id']
                 working_bool = True
