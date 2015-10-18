@@ -1,3 +1,7 @@
+"""
+git log live
+"""
+
 from flask import Flask
 from flask import render_template
 from flask import render_template_string
@@ -60,7 +64,11 @@ def breadth_first_add(networkx_graph, commit, N):
 
 @app.route("/data")
 def data():
-    repo_path = request.args.get('repo_path', '')
+    try:
+        repo_path = request.args.get('repo_path', '')
+    except:
+        repo_path = '../c3.py/'
+        
     repo = git.Repo(repo_path)
 
     networkx_graph = nx.DiGraph()
@@ -90,16 +98,15 @@ def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
     
     maximumX, maximumY = find_max_xy(position)
 
-    if len(workingdiff) > 0:
-        networkx_graph.add_node("diff", message="working")
-        position['diff'] = [200+300,maximumY+100]
-    elif len(diff) > 0:
-        networkx_graph.add_node("diff", message="diff between previous commit")
-    else:
-        try:
-            position['diff'] = [0,0]
-        except Exception, e:
-            print(e)
+    for i in range(0, len(workingdiff)):
+        d = workingdiff[i]
+        networkx_graph.add_node(d.b_path, message=d.diff, color='pink')
+        position[d.b_path] = [200,maximumY+(i)*25+100]
+        
+    for i in range(0, len(diff)):
+        d = diff[i]
+        networkx_graph.add_node(d.b_path, message=d.diff, color='blue')
+        position[d.b_path] = [200+300,maximumY+(i)*25+100]
 
 def find_max_xy(position):
     tempx = 0
