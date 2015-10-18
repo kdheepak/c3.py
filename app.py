@@ -90,6 +90,7 @@ def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
     # e.g. workingdiff = [git.Diff.diff, git.Diff.diff] 
     # where git.Diff.diff is the diff object for a particular file
     # len(workingdiff) is number of files that have been changed
+    # store diff.blob.hexsha as id
     for i in range(0, len(workingdiff)):
         d = workingdiff[i]
         key = d.b_blob.hexsha
