@@ -58,13 +58,17 @@ h = H*1.5*data.nodes.length;
 
     var transitiontime = 0;
 
-    scale = d3.scale.linear()
+    scaleY = d3.scale.linear()
         .range([d3.min(data.nodes, function(d){return d.pos[1]} ), d3.max(data.nodes, function(d){return d.pos[1]} )])
         .domain([h, 0])
 
+    scaleX = d3.scale.linear()
+        .range([d3.min(data.nodes, function(d){return d.pos[0]} ), d3.max(data.nodes, function(d){return d.pos[0]} )])
+        .domain([0, w])
 
-var PosX = function(d, i, location) { return data.nodes[d[location]].pos[0]; };
-var PosY = function(d, i, location) { return scale.invert(data.nodes[d[location]].pos[1]); };
+
+var PosX = function(d, i, location) { return scaleX(data.nodes[d[location]].pos[0]); };
+var PosY = function(d, i, location) { return scaleY.invert(data.nodes[d[location]].pos[1]); };
 
 var reverseMap = {};
 
@@ -113,8 +117,8 @@ var linkUpdateSelection = vis.selectAll(".link")
 
     nodeUpdateSelection.enter().append("svg:circle")
       .attr("class", "node")
-      .attr("cx", function(d, i) { return d.pos[0]; })
-      .attr("cy", function(d, i) { return scale.invert(d.pos[1]); })
+      .attr("cx", function(d, i) { return scaleX(d.pos[0]); })
+      .attr("cy", function(d, i) { return scaleY.invert(d.pos[1]); })
       .attr("r", 0)
       .attr('fill', function(d, i) {if (reverseMap[d.id]==reverseMap[data['HEAD']]){return '#99FF66';} else {return 'red';}} )
       .on('mouseover', function(d,i) {
@@ -133,8 +137,8 @@ var linkUpdateSelection = vis.selectAll(".link")
     nodeUpdateSelection.transition()
         .delay(function(d,i) {return i*transitiontime})
         .attr("class", "node")
-        .attr("cx", function(d, i) { return d.pos[0]; })
-        .attr("cy", function(d, i) { return scale.invert(d.pos[1]); })
+        .attr("cx", function(d, i) { return scaleX(d.pos[0]); })
+        .attr("cy", function(d, i) { return scaleY.invert(d.pos[1]); })
         .attr('fill', function(d, i) {if (reverseMap[d.id]==reverseMap[data['HEAD']]){return '#99FF66';} else {return 'red';}} )
         .attr("r", 10)
 
@@ -146,8 +150,8 @@ var linkUpdateSelection = vis.selectAll(".link")
     textUpdateSelection
     .enter().append("text")
       .text(function(d) { return d.id.substring(0, 6) + " - " + d.message; })
-                 .attr("x", function(d) { return 15+d.pos[0]; })
-                 .attr("y", function(d) { return scale.invert(d.pos[1])+5; })
+                 .attr("x", function(d) { return 15+scaleX(d.pos[0]); })
+                 .attr("y", function(d) { return scaleY.invert(d.pos[1])+5; })
                  .attr("font-family", "sans-serif")
                  .attr("class", "message")
                  .attr("font-size", "15px")
@@ -159,8 +163,8 @@ var linkUpdateSelection = vis.selectAll(".link")
                  .transition()
                  .delay(function(d,i) {return i*transitiontime})
                     .style('fill-opacity', 1)
-                 .attr("x", function(d) { return 15+d.pos[0]; })
-                 .attr("y", function(d) { return scale.invert(d.pos[1])+5; })
+                 .attr("x", function(d) { return 15+scaleX(d.pos[0]); })
+                 .attr("y", function(d) { return scaleY.invert(d.pos[1])+5; })
                  .attr("class", "message")
                  .attr("font-family", "sans-serif")
                  .attr("font-size", "15px")
@@ -170,16 +174,16 @@ var linkUpdateSelection = vis.selectAll(".link")
     var labelUpdateSelection = vis.selectAll("text.labels")
         .data(data.labels);
 
-var labelPosX = function(d) { return reverseMap[d].pos[0]; };
-var labelPosY = function(d) { return reverseMap[d].pos[1]; };
+var labelPosX = function(d) { return scaleX(reverseMap[d].pos[0]); };
+var labelPosY = function(d) { return scaleY.invert(reverseMap[d].pos[1]); };
 
     labelUpdateSelection.exit().remove();
 
     labelUpdateSelection.enter().append("text")
       .text(function(d) { return d })
                     .style('fill-opacity', 0)
-     .attr("x", function(d, i) { return data[d][0]- 75; })
-     .attr("y", function(d, i) { return scale.invert(data[d][1])+5; })
+     .attr("x", function(d, i) { return scaleX(data[d][0]) - 75; })
+     .attr("y", function(d, i) { return scaleY.invert(data[d][1])+5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
      .attr("font-size", "15px");
@@ -189,8 +193,8 @@ var labelPosY = function(d) { return reverseMap[d].pos[1]; };
                  .transition()
                  .delay(function(d,i) {return i*transitiontime})
                     .style('fill-opacity', 1)
-     .attr("x", function(d, i) { return labelPosX(data[d]) - 50 ; })
-     .attr("y", function(d, i) { return scale.invert(labelPosY(data[d])) - 25 + i*5; })
+     .attr("x", function(d, i) { return scaleX(labelPosX(data[d])) - 50 ; })
+     .attr("y", function(d, i) { return scaleY.invert(labelPosY(data[d])) - 25 + i*5; })
      .attr("class", "labels")
      .attr("font-family", "sans-serif")
      .attr("font-size", "15px");
