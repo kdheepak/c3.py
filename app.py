@@ -100,12 +100,12 @@ def add_diff_to(networkx_graph, position, workingdiff=[], diff=[]):
 
     for i in range(0, len(workingdiff)):
         d = workingdiff[i]
-        networkx_graph.add_node(d.b_path, message=d.diff, color='pink')
+        networkx_graph.add_node(d.b_path, message=len(d.diff), color='pink')
         position[d.b_path] = [200,maximumY+(i)*25+100]
         
     for i in range(0, len(diff)):
         d = diff[i]
-        networkx_graph.add_node(d.b_path, message=d.diff, color='blue')
+        networkx_graph.add_node(d.b_path, message=len(d.diff), color='blue')
         position[d.b_path] = [200+300,maximumY+(i)*25+100]
 
 def find_max_xy(position):
