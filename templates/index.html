@@ -29,7 +29,7 @@ var w = 1500,
 var h = H;
 
 var vis = d3.select("#chart")
-  .append("svg:svg");
+  .append("svg:svg").style("padding-top", "100px").style("padding-bottom", "100px")
 
 d3.json("/data", function(data) {
 
