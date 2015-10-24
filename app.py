@@ -14,7 +14,9 @@ app = Flask(__name__)
 @app.route('/', methods=['POST', 'GET'])
 def form_post():
     if request.method == 'POST':
+        # Get repo_path from the text field
         repo_path = request.form['text']
+        # pass repo_path as a variable to index.html
         return render_template("index.html", repo_path=repo_path)
     else:
         return render_template("index.html")
@@ -26,28 +28,37 @@ def data():
     except:
         repo_path = '../c3.py/'
         
+    # create a git repo
     repo = git.Repo(repo_path)
 
+    # create a networkx graph
     networkx_graph = nx.DiGraph()
 
+    # find the head commit
     commit = repo.head.commit
 
+    # find diff between staged and index
     diff = commit.diff(create_patch=True)   
+    # find diff between working dir and index
     workingdiff = commit.diff(None, create_patch=True)     
     
+    # add all the commits before `commit` to the networkx_graph till we have reached 200 spots.
+    # add using breath_first_search
     breadth_first_add(networkx_graph, commit, 200)
 
+    # create a graphviz vertical layout
     position=nx.graphviz_layout(networkx_graph, prog='dot')
 
+    # Add the diff to the networkx graph without linking them to the graph
     add_diff_to(networkx_graph, position, workingdiff, diff)
     
+    # Convert to data
     data = json_graph.node_link_data(networkx_graph)
 
+    # Add all branch labels to the data
     store_branch_labels(data, position, repo)
 
-
-    # store_diff_in(data, diff, workingdiff)
-
+    # return a json dump of data to /data
     j = json.dumps(data)
     return(j)
 
