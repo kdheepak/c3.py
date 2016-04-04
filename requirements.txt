@@ -6,3 +6,4 @@ networkx==1.10
 pyparsing==1.5.7
 pydot==1.0.2
 pydot2==1.0.33
+pydotplus
