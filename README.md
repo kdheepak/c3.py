@@ -13,6 +13,8 @@ I highly welcome contributions. I would like to learn how to use d3.js / flask b
 # Installation
 
     pip install -r requirements.txt
+    
+You also need to install `graphviz-dev`.
 
 # Running
 
